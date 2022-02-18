@@ -1,3 +1,5 @@
+const scoreDisplay = document.querySelector('p');
+
 // setup canvas
 
 const canvas = document.querySelector('canvas');
@@ -151,6 +153,7 @@ class EvilCircle extends Ball {
 
                 if (distance < this.size + ball.size) {
                     ball.exists = false;
+                    ballCount -= 1;
                 }
             }
         }
@@ -161,7 +164,15 @@ class EvilCircle extends Ball {
 const balls = [];
 const evilCircle = new EvilCircle(50, 50);
 evilCircle.setControls();
-
+let ballCount = 0;
+let feedingTime = setTimeout(() => {
+    for(const ball of balls) {
+        if(!(ball.exists)) {
+            ball.exists = true;
+            ballCount += 1;
+        }
+    }
+}, 20000);
 
 while (balls.length < 25) {
     const exists = true;
@@ -176,7 +187,7 @@ while (balls.length < 25) {
         size,
         exists
     );
-
+    ballCount += 1;
     balls.push(ball);
 }
 
@@ -184,7 +195,6 @@ function loop() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
     evilCircle.draw();
-    
     evilCircle.checkBounds();
     evilCircle.collisionDetect();
 
@@ -194,9 +204,10 @@ function loop() {
             ball.update();
             ball.collisionDetect();
         }
-    }
+        }
 
     requestAnimationFrame(loop);
+    scoreDisplay.textContent = `Ball Count: ${ballCount}`;
 }
 
 loop();
