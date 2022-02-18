@@ -1,4 +1,6 @@
-const scoreDisplay = document.querySelector('p');
+const ballCountDisplay = document.getElementById('ball-count');
+const playerOneScoreDisplay = document.getElementById('player-one-score');
+const playerTwoScoreDisplay = document.getElementById('player-two-score');
 
 // setup canvas
 
@@ -90,8 +92,10 @@ class Ball extends Shape {
 }
 
 class EvilCircle extends Ball {
-    constructor(x, y, color) {
+    constructor(x, y, color, score) {
         super(x, y, 20, 20, color, 10, true);
+        score = 0;
+        this.score = score;
     }
 
     setControlsPlayer1() {
@@ -173,6 +177,7 @@ class EvilCircle extends Ball {
                 if (distance < this.size + ball.size) {
                     ball.exists = false;
                     ballCount -= 1;
+                    this.score += 1;
                 }
             }
         }
@@ -231,7 +236,9 @@ function loop() {
         }
 
     requestAnimationFrame(loop);
-    scoreDisplay.textContent = `Ball Count: ${ballCount}`;
+    ballCountDisplay.textContent = `Ball Count: ${ballCount}`;
+    playerOneScoreDisplay.textContent = `Player 1: ${redEvilCircle.score}`;
+    playerTwoScoreDisplay.textContent = `Player 2: ${greenEvilCircle.score}`;
 }
 
 loop();
