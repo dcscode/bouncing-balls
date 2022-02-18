@@ -61,7 +61,7 @@ class Ball extends Shape {
             this.velY = -(this.velY);
         }
 
-        //is this ball going off the top edge of the canvas
+        //is the ball going off the top edge of the canvas
         if ((this.y - this.size) <= 0) {
             this.velY = -(this.velY);
         }
@@ -88,7 +88,9 @@ class Ball extends Shape {
 class EvilCircle extends Ball {
     constructor(x, y, velX, velY, color, size) {
         super(x, y, 20, 20, "white", 10);
+    }
 
+    setControls() {
         window.addEventListener('keydown', (e) => {
             switch(e.key) {
                 case 'a':
@@ -103,8 +105,8 @@ class EvilCircle extends Ball {
                 case 's':
                     this.y += this.velY;
                     break;
-            }
-        });
+        }
+    });
     }
 
     draw() {
@@ -114,6 +116,43 @@ class EvilCircle extends Ball {
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
         ctx.stroke();
 }
+
+    checkBounds() {
+        //is the EvilCirlce going off the right edge of the canvas
+        if ((this.x + this.size) >= width) {
+            this.x = (-this.size);
+        }
+
+        //is the EvilCircle going off the left edge of the canvas
+        if ((this.x - this.size) <= 0) {
+            this.x = -(this.size);
+        }
+
+        //is the EvilCircle going off the bottom edge of the canvas
+        if ((this.y + this.size) >= height) {
+            this.y = -(this.size);
+        }
+
+        //is the EvilCircle going off the top edge of the canvas
+        if ((this.y - this.size) <= 0) {
+            this.y = -(this.size);
+        }
+
+    }
+
+    collisionDetect() {
+        for (const ball of balls) {
+            if(ball.exists) {
+                const dx = this.x - ball.x;
+                const dy = this.y - ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.size + ball.size) {
+                    this.ball.exists = false;
+                }
+            }
+        }
+    }
 }
 
 
