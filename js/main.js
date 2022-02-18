@@ -90,13 +90,13 @@ class Ball extends Shape {
 }
 
 class EvilCircle extends Ball {
-    constructor(x, y) {
-        super(x, y, 20, 20, "white", 10, true);
+    constructor(x, y, color) {
+        super(x, y, 20, 20, color, 10, true);
     }
 
-    setControls() {
+    setControlsPlayer1() {
         window.addEventListener('keydown', (e) => {
-            switch(e.key) {
+            switch (e.key ) {
                 case 'a':
                     this.x -= this.velX;
                     break;
@@ -107,6 +107,25 @@ class EvilCircle extends Ball {
                     this.y -= this.velY;
                     break;
                 case 's':
+                    this.y += this.velY;
+                    break;
+        }
+    });
+    }
+
+    setControlsPlayer2() {
+        window.addEventListener('keydown', (e) => {
+            switch (e.key ) {
+                case 'ArrowLeft':
+                    this.x -= this.velX;
+                    break;
+                case 'ArrowRight':
+                    this.x += this.velX;
+                    break;
+                case 'ArrowUp':
+                    this.y -= this.velY;
+                    break;
+                case 'ArrowDown':
                     this.y += this.velY;
                     break;
         }
@@ -162,10 +181,12 @@ class EvilCircle extends Ball {
 
 
 const balls = [];
-const evilCircle = new EvilCircle(50, 50);
-evilCircle.setControls();
+const redEvilCircle = new EvilCircle(50, 50, 'red');
+const greenEvilCircle = new EvilCircle(30, 30, 'green');
+redEvilCircle.setControlsPlayer1();
+greenEvilCircle.setControlsPlayer2();
 let ballCount = 0;
-let feedingTime = setTimeout(() => {
+let feedingTime = setTimeout( () => {
     for(const ball of balls) {
         if(!(ball.exists)) {
             ball.exists = true;
@@ -194,9 +215,12 @@ while (balls.length < 25) {
 function loop() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
-    evilCircle.draw();
-    evilCircle.checkBounds();
-    evilCircle.collisionDetect();
+    redEvilCircle.draw();
+    redEvilCircle.checkBounds();
+    redEvilCircle.collisionDetect();
+    greenEvilCircle.draw();
+    greenEvilCircle.checkBounds();
+    greenEvilCircle.collisionDetect();
 
     for (const ball of balls) {
         if (ball.exists) {
