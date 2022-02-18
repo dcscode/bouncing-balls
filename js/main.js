@@ -31,11 +31,13 @@ class Shape {
 
 class Ball extends Shape {
 
-    constructor(x, y, velX, velY, color, size) {
+    constructor(x, y, velX, velY, color, size, exists) {
         super(x, y, velX, velY);
         this.color = color;
         this.size = size;
-        this.exists = true;
+        exists = true;
+        this.exists = exists;
+        
     }
 
     draw() {
@@ -86,8 +88,8 @@ class Ball extends Shape {
 }
 
 class EvilCircle extends Ball {
-    constructor(x, y, velX, velY, color, size) {
-        super(x, y, 20, 20, "white", 10);
+    constructor(x, y) {
+        super(x, y, 20, 20, "white", 10, true);
     }
 
     setControls() {
@@ -148,7 +150,7 @@ class EvilCircle extends Ball {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < this.size + ball.size) {
-                    this.ball.exists = false;
+                    ball.exists = false;
                 }
             }
         }
@@ -157,8 +159,12 @@ class EvilCircle extends Ball {
 
 
 const balls = [];
+const evilCircle = new EvilCircle(50, 50);
+evilCircle.setControls();
+
 
 while (balls.length < 25) {
+    const exists = true;
     const size = random(10, 20);
     const ball = new Ball(
         //ball position always drawn at least one ball width away from the edge of the canvas to avoid drawing errors
@@ -167,7 +173,8 @@ while (balls.length < 25) {
         random(-7,7),
         random(-7,7),
         randomRGB(),
-        size
+        size,
+        exists
     );
 
     balls.push(ball);
@@ -176,11 +183,17 @@ while (balls.length < 25) {
 function loop() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
+    evilCircle.draw();
+    
+    evilCircle.checkBounds();
+    evilCircle.collisionDetect();
 
     for (const ball of balls) {
-        ball.draw();
-        ball.update();
-        ball.collisionDetect();
+        if (ball.exists) {
+            ball.draw();
+            ball.update();
+            ball.collisionDetect();
+        }
     }
 
     requestAnimationFrame(loop);
